@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
                     break;
                 }
                 /*odczyt plików*/
-                FILE*in = fopen(argv[tmp], "r");
+             /*   FILE*in = fopen(argv[tmp], "r");
                 if (in == NULL){
                     printf("Nie mozna otworzyc %s\n", argv[tmp]);
                     return 1;
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
                 }
                 else{
                     read_file(in);
-                }
+                }*/
                 fprintf(stdout,"%s - plik\n",argv[tmp]);
             }
         }
