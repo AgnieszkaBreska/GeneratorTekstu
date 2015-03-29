@@ -1,19 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MAXLITER 20
-int main (int argc, char** argv){
+#include "struct.h"
 
-    int n = 3;
-    struct gram{
-        char tabgram[n][MAXLITER]; 
-        char tabslowa[5][MAXLITER];
-    };
-    struct gram wektor[10];
+void read_file (int n,FILE* in){
 
+    
+    struct gram wektor[20];
+    
     char c;
-
-    FILE *in = argc > 1 ? fopen (argv[1], "r" ) : stdin;
 
     int k,i,j;
     /*odczytanie pierwszej struktury */
@@ -36,7 +31,7 @@ int main (int argc, char** argv){
     wektor[0].tabslowa[0][i] = '\0';
 
     /*odczytywanie kolejnych struktur*/
-    for(k = 1; k < 10 ; k++){
+    for(k = 1; k < 20 ; k++){
         for(j = 0; j < (n-1); j++){
             for(i = 0; i < MAXLITER; i++){
                 wektor[k].tabgram[j][i] = wektor[k-1].tabgram[j+1][i];
@@ -55,7 +50,7 @@ int main (int argc, char** argv){
 
     }
 
-    for (k = 0; k < 10; k++){
+    for (k = 0; k < 20; k++){
         printf("[ ");
         for (j = 0; j < n; j++){
             for (i = 0 ; wektor[k].tabgram[j][i] != '\0'; i++){
@@ -69,6 +64,7 @@ int main (int argc, char** argv){
 
         printf("]\n");
     }
-    return 0;
+    licznik = k;
+    printf ("ilość  =  %d \n", licznik);
 }
 
