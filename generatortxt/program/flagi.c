@@ -26,12 +26,12 @@ int main(int argc, char* argv[]){
         /* sprawdzanie flag -n */  
         if (strcmp( argv[i], "-n") == 0){
             if(i+1 < argc && strcmp(argv[i+1],"-w") != 0 && strcmp(argv[i+1],"-a") != 0 && strcmp(argv[i+1],"-t") != 0){
-                if (atoi(argv[i+1]) > 0 && flaga_n == 0){
+                if (atoi(argv[i+1]) > 0 && flaga_n == 0 && atoi(argv[i+1]) <= 10){
                     n_gram = atoi (argv[i+1]);
                     flaga_n = 1;
                 }
                 else{
-                    fprintf( stderr, "%s: błąd! Proszą podać właściwą liczbę n-gramów\n", argv[0]);
+                    fprintf( stderr, "%s: błąd! Proszą podać właściwą liczbę n-gramów (0<n<11)\n", argv[0]);
                     return EXIT_FAILURE;
                 }
             } 
@@ -77,11 +77,13 @@ int main(int argc, char* argv[]){
         }
     }
 
+    char *wektorplikow[30];
+    int s =0;
     /* sprawdzanie flag -t */
     for(i = 1; i < argc; i++){ 
         if (strcmp( argv[i], "-t") == 0 && flaga_t ==0){
             flaga_t = 1;
-            for( tmp = i + 1; tmp < argc; tmp++){
+            for( tmp = i + 1; tmp < argc; tmp++,s++){
                 if(strcmp(argv[tmp], "-n") == 0 || strcmp(argv[tmp],"-w") == 0 || strcmp(argv[tmp],"-a") == 0){
                     break;
                 }else{
@@ -92,12 +94,21 @@ int main(int argc, char* argv[]){
                         return 1;
                     }
                     else{
-
-                    read_file(n_gram,in );
+                        wektorplikow[s] = argv[tmp];
+                        read_file(n_gram,in);
                     }
                 }
             }
         }
+    }
+    /*
+       if(read_file(n_gram,in,) == 1){
+       printf("Nie mozna otworzyc %s\n", argv[tmp]);
+       return 1;
+       }
+       */
+    for(i = 0; i < s ; i++){
+        printf("%s -plik\n",wektorplikow[i]);
     }
     return 0;
 }
