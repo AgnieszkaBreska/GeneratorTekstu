@@ -77,38 +77,31 @@ int main(int argc, char* argv[]){
         }
     }
 
-    char *wektorplikow[30];
-    int s =0;
+    FILE *wektorplikow[30];
+    int s = 0;
     /* sprawdzanie flag -t */
     for(i = 1; i < argc; i++){ 
         if (strcmp( argv[i], "-t") == 0 && flaga_t ==0){
             flaga_t = 1;
-            for( tmp = i + 1; tmp < argc; tmp++,s++){
+            for( tmp = i + 1; tmp < argc; tmp++){
                 if(strcmp(argv[tmp], "-n") == 0 || strcmp(argv[tmp],"-w") == 0 || strcmp(argv[tmp],"-a") == 0){
                     break;
                 }else{
                     /*odczyt plików*/
-                    FILE*in = fopen(argv[tmp], "r");
-                    if (in == NULL){
+                    wektorplikow[s] = fopen(argv[tmp], "r");
+                    if (wektorplikow[s] == NULL){
                         printf("Nie mozna otworzyc %s\n", argv[tmp]);
                         return 1;
                     }
-                    else{
-                        wektorplikow[s] = argv[tmp];
-                        read_file(n_gram,in);
-                    }
-                }
+                } s++;
             }
         }
     }
-    /*
-       if(read_file(n_gram,in,) == 1){
-       printf("Nie mozna otworzyc %s\n", argv[tmp]);
-       return 1;
-       }
-       */
-    for(i = 0; i < s ; i++){
-        printf("%s -plik\n",wektorplikow[i]);
-    }
+    
+    int iloscslow;
+    iloscslow = sprawdz(wektorplikow,s);
+    read_file(n_gram,wektorplikow,s,iloscslow);
+    printf ( "%d - liczba wyrazow w tekstach \n", iloscslow);
+
     return 0;
 }
