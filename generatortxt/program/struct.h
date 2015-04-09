@@ -5,5 +5,4 @@ struct gram{
     char tabslowa[200][MAXLITER];
     int i;
 };
-int licznik = 0;
 

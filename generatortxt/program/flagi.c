@@ -8,7 +8,7 @@ int main(int argc, char* argv[]){
 
     int n_gram = 2;
     int akapit = 1;
-    int wyrazy = 200;
+    int wyrazy = 10;
     int i, tmp;
     int flaga_a = 0;
     int flaga_w = 0;
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
                     fprintf( stderr, "%s: błąd! Proszą podać właściwą liczbę n-gramów (0<n<11)\n", argv[0]);
                     return EXIT_FAILURE;
                 }
-            } 
+            }
         }
         /* sprawdzanie flag -w */  
         else if (strcmp( argv[i], "-w") == 0){
@@ -93,13 +93,19 @@ int main(int argc, char* argv[]){
                         printf("Nie mozna otworzyc %s\n", argv[tmp]);
                         return 1;
                     }
-                } s++;
+                }
+                s++;
             }
         }
     }
-    
+
     int iloscslow;
     iloscslow = sprawdz(wektorplikow,s);
+    printf("liosc slow w tekstach = %d\n" ,iloscslow);
+    if(iloscslow < wyrazy){
+        printf("Zbyt mała ilość słów w tekstach bazowych\n");
+        return 1;
+    }
     read_file(n_gram,wektorplikow,s,iloscslow);
     printf ( "%d - liczba wyrazow w tekstach \n", iloscslow);
 
