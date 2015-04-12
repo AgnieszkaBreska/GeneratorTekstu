@@ -103,7 +103,11 @@ int main(int argc, char* argv[]){
     iloscslow = sprawdz(wektorplikow,s);
     printf("liosc slow w tekstach = %d\n" ,iloscslow);
     if(iloscslow < wyrazy){
-        printf("Zbyt mała ilość słów w tekstach bazowych\n");
+        printf("Zbyt mała ilość słów w tekstach bazowych (ilość slów < liczba wyrazów do wygenerowania)\n");
+        return 1;
+    }
+    if(iloscslow <= n_gram){
+        printf("Zbyt mała ilość słów w tekstach bazowych (slość słów < n-gram)\n");
         return 1;
     }
     read_file(n_gram,wektorplikow,s,iloscslow);

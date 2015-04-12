@@ -1,6 +1,8 @@
 #include "czytaj.h"
 #define IN 1
 #define OUT 0
+#define TAK 1
+#define NIE 0
 
 int sprawdz(FILE *plik[30], int s){
     int i, lw, c;
@@ -31,18 +33,14 @@ void wypisz(struct gram wektor[], int n, int licznik_struktur){
     for (k = 0; k < licznik_struktur; k++){
         printf("[ ");
         for (j = 0; j < n; j++){
-            for (i = 0 ; wektor[k].tabgram[j][i] != '\0'; i++){
-                printf("%c",wektor[k].tabgram[j][i]);
-            }
+
+            printf("%s",wektor[k].tabgram[j]);
             printf(" ");
         }   
         printf("]\t\t ");
-        printf("[");
-        for (i = 0 ; wektor[k].tabslowa[0][i] != '\0'; i++){ 
-            printf("%c",wektor[k].tabslowa[0][i]);
-        }   
-
-        printf("]\n");
+        for(i = 0; i < wektor[k].i; i++)
+            printf("[%s]",wektor[k].tabslowa[i]);
+        printf("\n");
     }   
     printf ("ilość  =  %d \n", licznik_struktur);
 }
@@ -53,7 +51,7 @@ void read_file (int n,FILE* plik[30],int s, int iloscslow){
 
     lw = iloscslow - n;
 
-    struct gram wektor[lw];
+    struct gram *wektor = malloc(lw*sizeof(struct gram));
 
     int licznik_struktur = 0;
     char c;
@@ -96,15 +94,61 @@ void read_file (int n,FILE* plik[30],int s, int iloscslow){
                 wektor[licznik_struktur].tabslowa[0][i] = c;
             }
             wektor[licznik_struktur].tabslowa[0][i] = '\0';
+            wektor[licznik_struktur].i = 1;
             ++licznik_struktur;     
             if(i == 0){
-                -- licznik_struktur;
-                break; 
+                -- licznik_struktur; 
             }
             if(c == EOF){
                 break;
             }
         }
     }
-    wypisz(wektor,n,licznik_struktur);
+    /*sprawdzanie powtorzen i tworzenie wektora wynikowego */
+    struct gram *wektor_wynikowy = malloc(lw*sizeof(struct gram));
+    if(!wektor_wynikowy)
+        printf("nie ma pamieci!\n");
+    int powtorzenie,k;
+    int licznik_struktur_wynikowy = 1;
+    for(j = 0; j < n; j++){
+        for( i = 0; i < MAXLITER; i++)
+            wektor_wynikowy[0].tabgram[j][i] = wektor[0].tabgram[j][i];
+    }
+    for( i = 0; i < MAXLITER; i++)
+        wektor_wynikowy[0].tabslowa[0][i] = wektor[0].tabslowa[0][i];
+    wektor_wynikowy[0].i = 1;
+
+    for (k = 1; k < licznik_struktur; k++){
+        for(a = 0; a < licznik_struktur_wynikowy; a++){
+            powtorzenie = TAK;
+            for(j = 0; j < n; j++){
+                if(strcmp(wektor_wynikowy[a].tabgram[j],wektor[k].tabgram[j]) != 0){
+                    powtorzenie = NIE;
+                    break;
+                }
+            }
+            if(powtorzenie == TAK)
+                break;
+        }
+
+        if(powtorzenie == TAK){
+            for(i = 0; i < MAXLITER; i++)
+                wektor_wynikowy[a].tabslowa[wektor_wynikowy[a].i][i] = wektor[k].tabslowa[0][i];
+            ++wektor_wynikowy[a].i;
+        }
+
+        if(powtorzenie == NIE){
+            for(j = 0; j < n; j++){
+                for(i = 0; i < MAXLITER; i++)
+                    wektor_wynikowy[licznik_struktur_wynikowy].tabgram[j][i] = wektor[k].tabgram[j][i];
+            }
+            for(i = 0; i < MAXLITER; i++)
+                wektor_wynikowy[licznik_struktur_wynikowy].tabslowa[0][i] = wektor[k].tabslowa[0][i];
+            wektor_wynikowy[licznik_struktur_wynikowy].i = 1;
+            ++licznik_struktur_wynikowy;
+        }
+    }    
+
+  /*  wypisz(wektor,n,licznik_struktur);*/
+    wypisz(wektor_wynikowy,n,licznik_struktur_wynikowy);
 }
