@@ -7,5 +7,5 @@
 
 int sprawdz(FILE *[],int);
 void wypisz (struct gram [], int,int);
-void read_file (int , FILE *[],int,int );
+int read_file (int , FILE *[],int,int,int);
 #endif

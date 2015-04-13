@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "czytaj.h"
 
-
 int main(int argc, char* argv[]){
 
     int n_gram = 2;
@@ -79,6 +78,10 @@ int main(int argc, char* argv[]){
 
     FILE *wektorplikow[30];
     int s = 0;
+    char *sciezka = "../dane/";
+    char buf[100];
+    strcpy(buf,sciezka);
+    int d = 8;
     /* sprawdzanie flag -t */
     for(i = 1; i < argc; i++){ 
         if (strcmp( argv[i], "-t") == 0 && flaga_t ==0){
@@ -88,7 +91,10 @@ int main(int argc, char* argv[]){
                     break;
                 }else{
                     /*odczyt plików*/
-                    wektorplikow[s] = fopen(argv[tmp], "r");
+                    for(d = 8; d < 100; d++){
+                        buf[d] = argv[tmp][d-8];
+                    }
+                    wektorplikow[s] = fopen(buf, "r");
                     if (wektorplikow[s] == NULL){
                         printf("Nie mozna otworzyc %s\n", argv[tmp]);
                         return 1;
@@ -101,7 +107,7 @@ int main(int argc, char* argv[]){
 
     int iloscslow;
     iloscslow = sprawdz(wektorplikow,s);
-    printf("liosc slow w tekstach = %d\n" ,iloscslow);
+   /* printf("liosc slow w tekstach = %d\n" ,iloscslow);*/
     if(iloscslow < wyrazy){
         printf("Zbyt mała ilość słów w tekstach bazowych (ilość slów < liczba wyrazów do wygenerowania)\n");
         return 1;
@@ -110,8 +116,11 @@ int main(int argc, char* argv[]){
         printf("Zbyt mała ilość słów w tekstach bazowych (slość słów < n-gram)\n");
         return 1;
     }
-    read_file(n_gram,wektorplikow,s,iloscslow);
-    printf ( "%d - liczba wyrazow w tekstach \n", iloscslow);
-
+    if(read_file(n_gram,wektorplikow,s,iloscslow,wyrazy) != 0){
+        return 1;
+    }
+    
+    for(d = 0; d < s; d++)
+       fclose(wektorplikow[d]);
     return 0;
 }

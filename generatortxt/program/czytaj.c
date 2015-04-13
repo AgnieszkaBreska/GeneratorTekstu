@@ -29,23 +29,24 @@ int sprawdz(FILE *plik[30], int s){
 void wypisz(struct gram wektor[], int n, int licznik_struktur){
 
     int k,j,i;
-
+    FILE *out = fopen("../wynik/wetor_struktur.txt","w");
     for (k = 0; k < licznik_struktur; k++){
-        printf("[ ");
+        fprintf(out,"[ ");
         for (j = 0; j < n; j++){
 
-            printf("%s",wektor[k].tabgram[j]);
-            printf(" ");
+            fprintf(out,"%s",wektor[k].tabgram[j]);
+            fprintf(out," ");
         }   
-        printf("]\t\t ");
+        fprintf(out,"]\t\t ");
         for(i = 0; i < wektor[k].i; i++)
-            printf("[%s]",wektor[k].tabslowa[i]);
-        printf("\n");
+            fprintf(out,"[%s]",wektor[k].tabslowa[i]);
+        fprintf(out,"\n");
     }   
-    printf ("ilość  =  %d \n", licznik_struktur);
+    fprintf (out,"ilość  =  %d \n", licznik_struktur);
+    fclose(out);
 }
 
-void read_file (int n,FILE* plik[30],int s, int iloscslow){
+int read_file (int n,FILE* plik[30],int s, int iloscslow,int wyrazy){
 
     int lw,i,j,a;
 
@@ -53,6 +54,10 @@ void read_file (int n,FILE* plik[30],int s, int iloscslow){
 
     struct gram *wektor = malloc(lw*sizeof(struct gram));
 
+    if(wektor == NULL){
+        printf("nie udało się zaalokować pamięci do wektora struktur\n");
+        return 1;
+    }
     int licznik_struktur = 0;
     char c;
 
@@ -151,4 +156,12 @@ void read_file (int n,FILE* plik[30],int s, int iloscslow){
 
   /*  wypisz(wektor,n,licznik_struktur);*/
     wypisz(wektor_wynikowy,n,licznik_struktur_wynikowy);
+    if(staty_wejscia(wektor,licznik_struktur,wektor_wynikowy,licznik_struktur_wynikowy,n) != 0)
+        return 1;
+    free(wektor);
+    if(generuj(wektor_wynikowy,licznik_struktur_wynikowy,n,wyrazy) != 0){
+        return 1;
+    }
+    free(wektor_wynikowy);
+        return 0;
 }
