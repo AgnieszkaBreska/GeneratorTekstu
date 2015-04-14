@@ -40,11 +40,14 @@ int generuj(struct gram wektor[],int licznik,int n, int w){
                 break;
             }
         }
-        if(k%100 == 0)
+        if((k% 25) == 0)
             fprintf(out,"\n");
+        if((k % 100) == 0)
+            fprintf(out,"\t");
     }
     /*printf("\n liczba wyrazów: %d\n",i);*/
     fclose(out);
+    printf("Udało się wygenerować tekst wyjściowy!\n");
     if(staty_wyjscia(i) != 0)
         return 1;
     return 0;
